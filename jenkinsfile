@@ -1,0 +1,47 @@
+pipeline {
+       agent {
+	        label {
+			     label 1 "built-in"
+                 customworkspace "/mnt/project"
+                 }
+                }
+                 stages {
+                      stage ("install-on-master") {
+                  steps {
+                     sh "yum install tree -y"
+                     }
+                    }
+				        stage ("install-on-slave-1") {
+                          agent {
+                            label {
+                                 label "slave-1"
+                             customworkspace "/mnt/project"
+                              }
+                             }
+                   steps {
+                      sh "sudo yum install tree -y"
+                      sh "sudo yum install httpd -y"
+                      sh "sudo echo 'velocity-app' >> /var/www/html/"					  
+      				  sh "sudo service httpd start"
+                      sh "sudo chmod -R 777 /var/www/html/index.html"
+					  }
+					 }
+                        stage ("install-on-slave2") {
+                           agent {
+                               label "slave-2"
+                              customworkspace "/mnt/project"
+                              }
+                             }
+                           steps {
+                               sh "sudo yum install tree -y"
+                               sh "sudo yum install httpd -y"
+                               sh "sudo echo 'velocity-app' >> /var/www/html/"
+                               sh "sudo chmod -R 777 /var/www/html/index.html"
+                               sh "sudo service httpd start"
+                               }
+                              }
+                             }
+                            }
+                          }							
+                     					  
+
